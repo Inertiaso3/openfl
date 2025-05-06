@@ -57,7 +57,7 @@ class Application #if lime extends LimeApplication #end
 	}
 
 	#if lime
-	public override function createWindow(attributes:WindowAttributes):Window
+	public override function createWindow(attributes:WindowAttributes, parentWnd:lime.ui.Window = null):Window
 	{
 		var window = new Window(this, attributes);
 

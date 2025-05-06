@@ -289,7 +289,10 @@ class BitmapData implements IBitmapDrawable
 			#if lime
 			#if sys
 			var buffer = new ImageBuffer(new UInt8Array(width * height * 4), width, height);
-			buffer.format = BGRA32;
+
+			// Don't want to default to this format for our engine - thats specific
+			// to Flash API.
+			//buffer.format = BGRA32;
 			buffer.premultiplied = true;
 
 			image = new Image(buffer, 0, 0, width, height);
@@ -3272,7 +3275,8 @@ class BitmapData implements IBitmapDrawable
 			__textureHeight = height;
 
 			#if sys
-			image.format = BGRA32;
+			// Our engine doesnt use this format
+			// image.format = BGRA32;
 			image.premultiplied = true;
 			#end
 

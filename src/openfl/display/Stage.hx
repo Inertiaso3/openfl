@@ -2221,11 +2221,14 @@ class Stage extends DisplayObjectContainer #if lime implements IModule #end
 		__enterFrame(__deltaTime);
 		__deltaTime = 0;
 
-		var cancelled = __render(context);
+		// Changed from openfl here - this was making it so only
+		// openfl would render and cancelling any other render events
+		// but we need those.
+		var cancelled = __render(context);/*
 		if (cancelled)
 		{
 			window.onRender.cancel();
-		}
+		}*/
 
 		__rendering = false;
 	}

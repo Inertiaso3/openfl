@@ -38,7 +38,7 @@ class Window #if lime extends LimeWindow #end
 	@:noCompletion private function new(application:Application, attributes:#if lime WindowAttributes #else Dynamic #end)
 	{
 		#if lime
-		super(application, attributes);
+		super(application, attributes, null);
 		#end
 
 		#if (!flash && !macro)
