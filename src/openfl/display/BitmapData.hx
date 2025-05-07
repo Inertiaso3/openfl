@@ -316,7 +316,10 @@ class BitmapData implements IBitmapDrawable
 			//
 			// }
 			#else
+			// html5 version
 			image = new Image(null, 0, 0, width, height, fillColor);
+			// Added this 17-03-2025
+			image.premultiplied = true;
 			#end
 
 			image.transparent = transparent;
