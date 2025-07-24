@@ -294,50 +294,28 @@ class URLLoader extends EventDispatcher
 		var openEvent:Event = new Event(Event.OPEN);
 		dispatchEvent(openEvent);
 
-		if (dataFormat == BINARY)
-		{
-			var httpRequest = new HTTPRequest<ByteArray>();
-			__prepareRequest(httpRequest, request);
+		// changes due to lesson learnt from goose:
+		// using HTTPRequest<String> breaks sending multipart form data due to the conversion of '\r\n' to '\r\r\n' on android/ios/mac by
+		// curl.setOption(TRANSFERTEXT,!binary); in haxe/lib/lime/src/lime/_internal/backend/native/NativeHTTPRequest.hx initRequest();
+		// so we always use HTTPRequest<Bytes> and just convert the bytes to a string in processResponse if necessary.
+			
+		var httpRequest = new HTTPRequest<ByteArray>();
+		__prepareRequest(httpRequest, request);
 
-			httpRequest.load()
-				.onProgress(httpRequest_onProgress)
-				.onError(httpRequest_onError)
-				.onComplete(function(data:ByteArray):Void
-				{
-					__dispatchResponseStatus();
-					__dispatchStatus();
-					this.data = data;
+		httpRequest.load()
+			.onProgress(httpRequest_onProgress)
+			.onError(httpRequest_onError)
+			.onComplete(function(data:ByteArray):Void
+			{
+				__dispatchResponseStatus();
+				__dispatchStatus();
+				this.data = data;
 
-					var event = new Event(Event.COMPLETE);
-					dispatchEvent(event);
-				});
-		}
-		else
-		{
-			var httpRequest = new HTTPRequest<String>();
-			__prepareRequest(httpRequest, request);
-
-			httpRequest.load()
-				.onProgress(httpRequest_onProgress)
-				.onError(httpRequest_onError)
-				.onComplete(function(data:String):Void
-				{
-					__dispatchResponseStatus();
-					__dispatchStatus();
-
-					if (dataFormat == VARIABLES)
-					{
-						this.data = new URLVariables(data);
-					}
-					else
-					{
-						this.data = data;
-					}
-
-					var event = new Event(Event.COMPLETE);
-					dispatchEvent(event);
-				});
-		}
+				if (dataFormat != BINARY)
+					this.data = cast(data,lime.utils.Bytes).getString(0,data.length,UTF8);
+				var event = new Event(Event.COMPLETE);
+				dispatchEvent(event);
+			});
 		#end
 	}
 
