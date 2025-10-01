@@ -2191,8 +2191,10 @@ class Stage extends DisplayObjectContainer #if lime implements IModule #end
 		#end
 
 		var event:Event = null;
-
+		
 		#if openfl_pool_events
+		// NOT USED
+		/*
 		event = Event.__pool.get();
 		event.type = Event.ENTER_FRAME;
 
@@ -2210,15 +2212,16 @@ class Stage extends DisplayObjectContainer #if lime implements IModule #end
 
 		__broadcastEvent(event);
 
-		Event.__pool.release(event);
+		Event.__pool.release(event);*/
+
 		#else
 		__broadcastEvent(new Event(Event.ENTER_FRAME));
 		__broadcastEvent(new Event(Event.FRAME_CONSTRUCTED));
 		__broadcastEvent(new Event(Event.EXIT_FRAME));
 		#end
-
+		
 		__renderable = true;
-		__enterFrame(__deltaTime);
+		// __enterFrame(__deltaTime);	// 2025 - removed
 		__deltaTime = 0;
 
 
